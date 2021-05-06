@@ -9,9 +9,13 @@ class ListsIndex extends React.Component {
   }
   
   componentDidMount(){
-    this.setState({
-      lists: this.props.lists
-    })
+    this.getIndex();
+  }
+
+  getIndex(){
+    fetch('/api/v1/lists.json')
+    .then((response) => {return response.json()})
+    .then((data) => {this.setState({ lists: data }) });
   }
 
 
