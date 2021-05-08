@@ -4,12 +4,20 @@ class ListsIndex extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      lists: []
+      lists: [],
+      form: {
+        title: "",
+        description: "",
+      }
     };
   
     this.getIndex = this.getIndex.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.deleteList = this.deleteList.bind(this);
+
+    this.handleChange = this.handleChange.bind(this);
+    this.addList = this.addList.bind(this);
+    this.formReset = this.formReset.bind(this);
   }
   
   componentDidMount(){
@@ -43,6 +51,54 @@ class ListsIndex extends React.Component {
     })
   }
 
+  handleChange(e,key){
+    let target = e.target;
+    let value = target.value;
+    let form = this.state.form;
+    form[key] = value;
+
+    this.setState({
+      form: form
+    });
+  }
+
+  handleCreate(){
+    let body = JSON.stringify({
+      list: {
+        title: this.state.form.title,
+        description: this.state.form.description
+      }
+    })
+
+    fetch('http://localhost:3000/api/v1/lists', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: body,
+    })
+
+    .then((response) => {return response.json()})
+    .then((list)=>{
+      this.addList(list);
+      this.formReset();
+    })
+  }
+
+  addList(list){
+    this.setState({
+      lists: this.state.lists.concat(list)
+    })
+  }
+
+  formReset(){
+    this.setState({
+      form:{
+        title: "",
+        description: ""
+      }
+    })
+  }
 
   render () {
     return (
@@ -67,8 +123,20 @@ class ListsIndex extends React.Component {
                     <button onClick={() => this.handleDelete(list.id)}>delete</button>
                   </td>
                 </tr>
-              )
+              );
             })}
+            <tr>
+              <td></td>
+              <td>
+                <input type="text" value={this.state.form.title} onChange={e=>this.handleChange(e,'title')} />
+              </td>
+              <td>
+                <input type="text" value={this.state.form.description} onChange={e=>this.handleChange(e,'description')} />
+              </td>
+              <td>
+                <button onClick={() => this.handleCreate()}>add</button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
