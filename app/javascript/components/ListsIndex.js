@@ -31,7 +31,8 @@ class ListsIndex extends React.Component {
   }
 
   handleDelete(id){
-    fetch(`http://localhost:3000/api/v1/lists/${id}`, 
+    // fetch(`http://localhost:3000/api/v1/lists/${id}`, 
+    fetch(`https://heorku-rail-react.herokuapp.com//api/v1/lists/${id}`,
       {
         method: 'DELETE',
         headers: {
@@ -70,7 +71,8 @@ class ListsIndex extends React.Component {
       }
     })
 
-    fetch('http://localhost:3000/api/v1/lists', {
+    // fetch('http://localhost:3000/api/v1/lists', {
+    fetch('https://heorku-rail-react.herokuapp.com//api/v1/lists', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
